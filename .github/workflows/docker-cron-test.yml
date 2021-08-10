@@ -1,0 +1,37 @@
+name: Docker Test Cron CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build the Docker image
+      shell: bash
+      run: docker build . --file Dockerfile --tag test/cron
+
+    - name: Test running the container for 1.1 minutes
+      shell: bash
+      run: |
+        set -x
+        timeout --signal=SIGKILL 1.1m docker run -it --name cron --rm test/cron > test.log
+        docker stop cron || true
+        echo "Content of test.log:"
+        cat test.log
+
+    - name: Test that the cron worked
+      shell: python
+      run: |
+        with open('test.log', 'r') as f:
+            content = f.read()
+        if "Done running run.py" not in content:
+            raise ValueError("Expected output not found")
