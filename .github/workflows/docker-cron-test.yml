@@ -23,7 +23,7 @@ jobs:
       shell: bash
       run: |
         set -x
-        timeout --signal=SIGKILL 1.1m docker run -it --name cron --rm test/cron > test.log
+        timeout --signal=SIGKILL 1.1m docker run -i --name cron --rm test/cron > test.log
         docker stop cron || true
         echo "Content of test.log:"
         cat test.log
