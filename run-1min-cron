@@ -1,0 +1,13 @@
+# Run this every 1 minute, redirect all output (stdout and stderr) to a log file
+# I also add an initial echo with timestamp so we can check it's running. Note that I have to escape the % signs in the time format
+# ┌───────────── min (0 - 59)
+# │ ┌────────────── hour (0 - 23)
+# │ │ ┌─────────────── day of month (1 - 31)
+# │ │ │ ┌──────────────── month (1 - 12)
+# │ │ │ │ ┌───────────────── day of week (0 - 6) (0 to 6 are Sunday to Saturday, or use names; 7 is Sunday, the same as 0)
+# │ │ │ │ │
+# │ │ │ │ │
+# * * * * *  command to execute
+*/1 * * * * { echo "[`date '+\%Y-\%m-\%dT\%H:\%M\%z'`] Running run.py" && python3 /var/test/run.py && echo "[`date '+\%Y-\%m-\%dT\%H:\%M\%z'`] Done running run.py" || echo "[`date '+\%Y-\%m-\%dT\%H:\%M\%z'`] ERROR running run.py"; } >> /var/log/cron.log 2>&1
+# An empty line is required at the end of this file for a valid cron file.
+
